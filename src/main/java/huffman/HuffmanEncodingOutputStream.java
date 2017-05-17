@@ -15,12 +15,12 @@ public class HuffmanEncodingOutputStream extends BufferedOutputStream {
 		this.huffmanCoding = huffmanCoding;
 		stringBuilder = new StringBuilder();
 		byte[] bytes = huffmanCoding.getCodingHead().toString().getBytes();
-		byte[] bs = new byte[1024*4];
+		byte[] bs = new byte[1024 * 4];
 		for (int i = 0; i < bytes.length && i < bs.length; i++) {
 			bs[i] = bytes[i];
 		}
 		super.write(bs, 0, bs.length);
-		
+
 //		System.out.println("压缩字典：");
 //		huffmanCoding.printCoding();
 //		System.out.println("压缩树：");

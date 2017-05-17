@@ -15,8 +15,8 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 		super(in);
 		stringBuilder = new StringBuilder();
 		int result = 0;
-		byte[] bytes = new byte[1024*4];
-		while (result < 1024*4) {
+		byte[] bytes = new byte[1024 * 4];
+		while (result < 1024 * 4) {
 			int i = super.read(bytes, result, bytes.length);
 			if (i != -1) {
 				result += i;
@@ -26,7 +26,7 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 		}
 		String codingHead = new String(bytes);
 		huffmanCoding = new HuffmanCoding(codingHead);
-		
+
 //		System.out.println("解压字典：");
 //		huffmanCoding.printCoding();
 //		System.out.println("解压树：");
@@ -99,8 +99,8 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 		}
 	}
 	
-	public String pollBit(){
-		String s=stringBuilder.substring(0,1);
+	public String pollBit() {
+		String s = stringBuilder.substring(0, 1);
 		stringBuilder.delete(0, 1);
 		return s;
 	}

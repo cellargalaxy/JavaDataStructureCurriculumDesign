@@ -13,22 +13,21 @@ public class HuffmanCoding {
 	private String fileNmae;
 	
 	
-	
 	protected HuffmanCoding(String codingHead) {
-		this.codingHead=new StringBuilder(codingHead);
+		this.codingHead = new StringBuilder(codingHead);
 		String[] strings = codingHead.split(";");
 		fileNmae = strings[0].trim();
 		strings = strings[1].trim().split(":");
 		codings = new String[Byte.MAX_VALUE - Byte.MIN_VALUE + 1];
-		LinkedList<Byte> bytes=new LinkedList<Byte>();
+		LinkedList<Byte> bytes = new LinkedList<Byte>();
 		for (int i = 0; i < strings.length; i++) {
-			strings[i]=strings[i].trim();
+			strings[i] = strings[i].trim();
 			if (strings[i].length() > 0) {
 				codings[i] = strings[i];
-				bytes.add((byte)(i+Byte.MIN_VALUE));
+				bytes.add((byte) (i + Byte.MIN_VALUE));
 			}
 		}
-		tree=new HuffmanTree<Byte>(codings,bytes.iterator());
+		tree = new HuffmanTree<Byte>(codings, bytes.iterator());
 	}
 	
 	protected HuffmanCoding(long[] counts, String fileNmae) {
@@ -39,7 +38,6 @@ public class HuffmanCoding {
 		createCodings(tree.getRoot());
 		codingHead = new StringBuilder();
 	}
-	
 	
 	
 	private void createCodings(TreeNode<Byte> root) {
@@ -72,20 +70,20 @@ public class HuffmanCoding {
 	}
 	
 	public Byte codingToByte(HuffmanDecodingInputStream decodingInputStream) {
-		TreeNode<Byte> node=tree.getRoot();
+		TreeNode<Byte> node = tree.getRoot();
 		do {
-			String s=decodingInputStream.pollBit();
+			String s = decodingInputStream.pollBit();
 			if (s.equals("0")) {
-				node=node.getLeft();
-			}else if (s.equals("1")){
-				node=node.getRight();
-			}else {
+				node = node.getLeft();
+			} else if (s.equals("1")) {
+				node = node.getRight();
+			} else {
 				throw new RuntimeException("编码异常");
 			}
-			if (node.getLeft()==null&&node.getRight()==null) {
+			if (node.getLeft() == null && node.getRight() == null) {
 				return node.getT();
 			}
-		}while (true);
+		} while (true);
 	}
 	
 	public void printCoding() {
@@ -117,7 +115,7 @@ public class HuffmanCoding {
 		return fileNmae;
 	}
 	
-	public void printTree(){
+	public void printTree() {
 		tree.print();
 	}
 }
