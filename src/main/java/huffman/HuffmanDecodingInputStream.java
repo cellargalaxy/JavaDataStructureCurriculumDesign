@@ -15,8 +15,8 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 		super(in);
 		stringBuilder = new StringBuilder();
 		int result = 0;
-		byte[] bytes = new byte[3072];
-		while (result < 3072) {
+		byte[] bytes = new byte[1024*4];
+		while (result < 1024*4) {
 			int i = super.read(bytes, result, bytes.length);
 			if (i != -1) {
 				result += i;
@@ -26,8 +26,11 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 		}
 		String codingHead = new String(bytes);
 		huffmanCoding = new HuffmanCoding(codingHead);
-
-//		huffmanCoding.printCoding();/////////////////////////////////////////////////////////////////////////////////////////
+		
+//		System.out.println("解压字典：");
+//		huffmanCoding.printCoding();
+//		System.out.println("解压树：");
+//		huffmanCoding.printTree();
 	}
 	
 	@Override
@@ -38,18 +41,10 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 //			System.out.println(stringBuilder);
 			
 			int result = 0;
-			StringBuilder s = new StringBuilder("");
 			while (stringBuilder.length() > 16 && result < len) {
-				s.append(stringBuilder.substring(0, 1));
-				stringBuilder.delete(0, 1);
-				Byte b = huffmanCoding.codingToByte(s.toString());
-				if (b != null) {
-					bs[off + result] = b;
-					result++;
-					s.delete(0, s.length());
-				}
+				bs[off + result] = huffmanCoding.codingToByte(this);
+				result++;
 			}
-			stringBuilder.insert(0, s);
 
 //			System.out.println("再次剩余编码：");
 //			System.out.println(stringBuilder);
@@ -76,18 +71,10 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 //			System.out.println(stringBuilder);
 			
 			result = 0;
-			StringBuilder s = new StringBuilder("");
 			while (stringBuilder.length() > 16 && result < len) {
-				s.append(stringBuilder.substring(0, 1));
-				stringBuilder.delete(0, 1);
-				Byte b = huffmanCoding.codingToByte(s.toString());
-				if (b != null) {
-					bs[off + result] = b;
-					result++;
-					s.delete(0, s.length());
-				}
+				bs[off + result] = huffmanCoding.codingToByte(this);
+				result++;
 			}
-			stringBuilder.insert(0, s);
 
 //			System.out.println("剩余编码：");
 //			System.out.println(stringBuilder);
@@ -97,26 +84,25 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 			if (stringBuilder.length() == 0) {
 				return -1;
 			} else {
-				result = 0;
 				stringBuilder.delete(stringBuilder.length() - over - 8, stringBuilder.length());
 
 //				System.out.println("删除剩余编码，超码：");
 //				System.out.println(stringBuilder+"："+over);
 				
-				StringBuilder s = new StringBuilder("");
-				while (stringBuilder.length() > 0) {
-					s.append(stringBuilder.substring(0, 1));
-					stringBuilder.delete(0, 1);
-					Byte b = huffmanCoding.codingToByte(s.toString());
-					if (b != null) {
-						bs[off + result] = b;
-						result++;
-						s.delete(0, s.length());
-					}
+				result = 0;
+				while (stringBuilder.length() > 0 && result < len) {
+					bs[off + result] = huffmanCoding.codingToByte(this);
+					result++;
 				}
 				return result;
 			}
 		}
+	}
+	
+	public String pollBit(){
+		String s=stringBuilder.substring(0,1);
+		stringBuilder.delete(0, 1);
+		return s;
 	}
 	
 	public String getFileName() {

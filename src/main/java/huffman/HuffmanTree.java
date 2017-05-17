@@ -1,14 +1,48 @@
 package huffman;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 /**
  * Created by cellargalaxy on 2017/5/15.
  */
 public class HuffmanTree<T> {
 	private TreeNode<T> root;
 	
+	
+	
 	protected HuffmanTree(Link<TreeNode> link) {
 		root = createTree(link);
 		createCodings(root);
+	}
+	
+	protected HuffmanTree(String[] codings,Iterator<T> iterator){
+		root=new TreeNode<T>(null,-1);
+		for (String coding : codings) {
+			if (coding!=null) {
+				String[] bits=coding.split("");
+				TreeNode<T> node=root;
+				for (String bit : bits) {
+					if (bit.length()==0) {
+						continue;
+					}
+					if (bit.equals("0")) {
+						if (node.getLeft()==null) {
+							node.setLeft(new TreeNode<T>(null,-1));
+						}
+						node=node.getLeft();
+					}else if (bit.equals("1")){
+						if (node.getRight()==null) {
+							node.setRight(new TreeNode<T>(null,-1));
+						}
+						node=node.getRight();
+					}else{
+						throw new RuntimeException("哈夫曼树构建失败");
+					}
+				}
+				node.setT(iterator.next());
+			}
+		}
 	}
 	
 	private TreeNode createTree(Link<TreeNode> link) {
@@ -46,4 +80,27 @@ public class HuffmanTree<T> {
 		return root;
 	}
 	
+	public void print(){
+		print(root);
+	}
+	
+	private void print(TreeNode<T> node){
+		System.out.print("节点："+node.getCoding()+":"+node.getT());
+		if (node.getLeft()!=null) {
+			System.out.print("；有左孩子："+node.getLeft().getCoding()+":"+node.getLeft().getT());
+		}
+		if (node.getRight()!=null) {
+			System.out.print("；有右孩子："+node.getRight().getCoding()+":"+node.getRight().getT());
+		}
+		if (node.getLeft()==null&&node.getRight()==null) {
+			System.out.print("；是叶子节点");
+		}
+		System.out.println();
+		if (node.getLeft()!=null) {
+			print(node.getLeft());
+		}
+		if (node.getRight()!=null) {
+			print(node.getRight());
+		}
+	}
 }

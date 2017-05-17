@@ -8,13 +8,13 @@ import java.io.*;
 public class HuffmanCompression {
 	
 	public static void main(String[] args) throws IOException {
-		File file1 = new File("g:/20121016105904562.jpg");
+		File file1 = new File("g:/罗小黑战记01.mp4");
 		long t1 = System.currentTimeMillis();
 		File file2 = compression(file1, new File("f:/"), null);
 		long t2 = System.currentTimeMillis();
-		File file3 = decompression(file2, new File("e:/"), null);
+		File file3 = decompression(file2, new File("e:/"), "罗小黑战记.mp4");
 		long t3 = System.currentTimeMillis();
-		System.out.println("压缩时间：" + (t2 - t1));
+//		System.out.println("压缩时间：" + (t2 - t1));
 		System.out.println("解压时间：" + (t3 - t2));
 	}
 	
@@ -39,7 +39,14 @@ public class HuffmanCompression {
 		BufferedInputStream inputStream = null;
 		HuffmanEncodingOutputStream encodingOutputStream = null;
 		try {
+			
+			long t1=System.currentTimeMillis();
 			HuffmanCountInputStream countInputStream = new HuffmanCountInputStream(new FileInputStream(file));
+			long t2=System.currentTimeMillis();
+			System.out.println("统计时间："+(t2-t1));
+			
+			long t3=System.currentTimeMillis();
+			
 			long[] counts = countInputStream.getCounts();
 			HuffmanCoding huffmanCoding = new HuffmanCoding(counts, file.getName());
 			
@@ -50,6 +57,10 @@ public class HuffmanCompression {
 			while ((len = inputStream.read(bytes, 0, bytes.length)) != -1) {
 				encodingOutputStream.write(bytes, 0, len);
 			}
+			
+			long t4=System.currentTimeMillis();
+			System.out.println("压缩时间："+(t4-t3));
+			
 			return newFile;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,15 +96,15 @@ public class HuffmanCompression {
 		BufferedOutputStream outputStream = null;
 		try {
 			decodingInputStream = new HuffmanDecodingInputStream(new FileInputStream(file));
-			File newFile;
+			File newFile=null;
 			if (fileName == null) {
 				newFile = new File(saveFolder.getAbsolutePath() + "/" + decodingInputStream.getFileName());
 			} else {
 				newFile = new File(saveFolder.getAbsolutePath() + "/" + fileName);
 			}
-			
+
 			System.out.println("newFile:" + newFile.getAbsolutePath());
-			
+
 			outputStream = new BufferedOutputStream(new FileOutputStream(newFile));
 			while ((len = decodingInputStream.read(bytes, 0, bytes.length)) != -1) {
 				outputStream.write(bytes, 0, len);
