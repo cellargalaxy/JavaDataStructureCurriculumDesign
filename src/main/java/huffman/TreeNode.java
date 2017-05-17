@@ -12,10 +12,10 @@ public class TreeNode<T> {
 	private long count;
 	private String coding;
 	
-	public TreeNode(T t, long count) {
+	protected TreeNode(T t, long count) {
 		this.t = t;
 		this.count = count;
-		coding="";
+		coding = "";
 	}
 	
 	public TreeNode getParent() {

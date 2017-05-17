@@ -10,7 +10,7 @@ public class LinkNode<T> {
 	private T t;
 	private long count;
 	
-	public LinkNode(T t, long count) {
+	protected LinkNode(T t, long count) {
 		this.t = t;
 		this.count = count;
 	}
