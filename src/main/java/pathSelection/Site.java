@@ -1,36 +1,53 @@
 package pathSelection;
 
-import huffman.Link;
 
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by cellargalaxy on 2017/5/19.
  */
 public class Site implements Serializable{
+	private int id;
 	private String name;
 	private boolean isP;
-	private int countLen;
-	private LinkedList<Site> proSites;
-	private LinkedList<GoSite> goSites;
+	private double countLen;
+	private Set<Site> proSites;
+	private Set<GoSite> goSites;
 	
-	public Site(String name) {
+	private Site busSite;
+	private int start;
+	private int len;
+	
+	public Site(int id,String name) {
+		this.id=id;
 		this.name = name;
 		isP=false;
 		countLen=Integer.MAX_VALUE;
-		proSites=new LinkedList<Site>();
-		goSites=new LinkedList<GoSite>();
+		proSites=new HashSet<Site>();
+		goSites=new HashSet<GoSite>();
 	}
+	
 	
 	public void addProSite(Site site){
 		proSites.add(site);
 	}
 	
-	public void addNextSite(int len,Site site){
-		goSites.add(new GoSite(len,site));
+	public void addNextSite(GoSite goSite){
+		goSites.add(goSite);
 	}
 	/////////////////////////////////////////////////////////////////
+	
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -47,46 +64,75 @@ public class Site implements Serializable{
 		isP = p;
 	}
 	
-	public int getCountLen() {
+	public double getCountLen() {
 		return countLen;
 	}
 	
-	public void setCountLen(int countLen) {
+	public void setCountLen(double countLen) {
 		this.countLen = countLen;
 	}
 	
-	public LinkedList<Site> getProSites() {
+	public Set<Site> getProSites() {
 		return proSites;
 	}
 	
-	public void setProSites(LinkedList<Site> proSites) {
+	public void setProSites(Set<Site> proSites) {
 		this.proSites = proSites;
 	}
 	
-	public LinkedList<GoSite> getGoSites() {
+	public Set<GoSite> getGoSites() {
 		return goSites;
 	}
 	
-	public void setGoSites(LinkedList<GoSite> goSites) {
+	public void setGoSites(Set<GoSite> goSites) {
 		this.goSites = goSites;
+	}
+	
+	
+	public Site getBusSite() {
+		return busSite;
+	}
+	
+	public void setBusSite(Site busSite) {
+		this.busSite = busSite;
+	}
+	
+	public int getStart() {
+		return start;
+	}
+	
+	public void setStart(int start) {
+		this.start = start;
+	}
+	
+	public int getLen() {
+		return len;
+	}
+	
+	public void setLen(int len) {
+		this.len = len;
 	}
 	
 	@Override
 	public String toString() {
 		return "Site{" +
-				"name='" + name + '\'' +
-				", isP=" + isP +
+				"id=" + id +
+				", name='" + name + '\'' +
 				", countLen=" + countLen +
+				", busSite=" + busSite +
+				", start=" + start +
+				", len=" + len +
 				'}';
 	}
 	
-	public String toStringAll() {
+	public String toAllString() {
 		return "Site{" +
-				"name='" + name + '\'' +
-				", isP=" + isP +
+				"id=" + id +
+				", name='" + name + '\'' +
 				", countLen=" + countLen +
-				", \r\n	proSites=" + proSites +
-				", \r\n	goSites=" + goSites +
+				", proSites=" + proSites +
+				", goSites=" + goSites +
+				", start=" + start +
 				'}';
 	}
 }
