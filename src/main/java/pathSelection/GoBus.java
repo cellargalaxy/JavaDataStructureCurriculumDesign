@@ -3,14 +3,14 @@ package pathSelection;
 /**
  * Created by cellargalaxy on 2017/5/23.
  */
-public class BusPath {
+public class GoBus {
 	private Site start;
-	private String busName;
+	private int busId;
 	private Site end;
 	
-	public BusPath(Site start, String busName, Site end) {
+	public GoBus(Site start, int busId, Site end) {
 		this.start = start;
-		this.busName = busName;
+		this.busId = busId;
 		this.end = end;
 	}
 	
@@ -22,12 +22,12 @@ public class BusPath {
 		this.start = start;
 	}
 	
-	public String getBusName() {
-		return busName;
+	public int getBusId() {
+		return busId;
 	}
 	
-	public void setBusName(String busName) {
-		this.busName = busName;
+	public void setBusId(int busId) {
+		this.busId = busId;
 	}
 	
 	public Site getEnd() {
@@ -36,5 +36,14 @@ public class BusPath {
 	
 	public void setEnd(Site end) {
 		this.end = end;
+	}
+	
+	@Override
+	public String toString() {
+		return "GoBus{" +
+				"start=" + start.getId() +
+				", busId=" + busId +
+				", end=" + end.getId() +
+				'}';
 	}
 }

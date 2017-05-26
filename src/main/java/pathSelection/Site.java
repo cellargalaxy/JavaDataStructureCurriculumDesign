@@ -11,6 +11,9 @@ import java.util.Set;
 public class Site implements Serializable{
 	private int id;
 	private String name;
+	
+	private double dimension;
+	private double longitude;
 	private boolean isP;
 	private double countLen;
 	private Set<Site> proSites;
@@ -20,7 +23,15 @@ public class Site implements Serializable{
 	private int start;
 	private int len;
 	
-	public Site(int id,String name) {
+	public Site(String name) {
+		this(0,name);
+	}
+	
+	public Site(int id) {
+		this(id,null);
+	}
+	
+	public Site(int id, String name) {
 		this.id=id;
 		this.name = name;
 		isP=false;
@@ -113,12 +124,29 @@ public class Site implements Serializable{
 		this.len = len;
 	}
 	
+	public double getDimension() {
+		return dimension;
+	}
+	
+	public void setDimension(double dimension) {
+		this.dimension = dimension;
+	}
+	
+	public double getLongitude() {
+		return longitude;
+	}
+	
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	
 	@Override
 	public String toString() {
 		return "Site{" +
 				"id=" + id +
 				", name='" + name + '\'' +
 				", countLen=" + countLen +
+//				", proSites=" + proSites +
 				", busSite=" + busSite +
 				", start=" + start +
 				", len=" + len +

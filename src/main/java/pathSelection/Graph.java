@@ -4,7 +4,9 @@ package pathSelection;
 import util.CloneObject;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * Created by cellargalaxy on 2017/5/19.
@@ -33,7 +35,6 @@ public class Graph {
 	}
 	
 	
-	
 	public static Site[] createSitesGraph(Site[] sites,int[][] busPaths,GoSite[][] goSites){
 		for (int[] busPath : busPaths) {
 			for (int i = 0; i < busPath.length-1; i++) {
@@ -43,44 +44,52 @@ public class Graph {
 		return sites;
 	}
 	
-	public static Site[] createBusesGraph(LinkedList<Site> path, int[][] busPaths, String[] busNames) throws IOException, ClassNotFoundException {
+	public static Site[] createBusesGraph(LinkedList<Site> path, int[][] busPaths) throws IOException, ClassNotFoundException {
 		Site[] busSites=new Site[path.size()-1];
-		LinkedList<Site> bs=addBusesSites(path,busPaths,busNames);
-		for (Site site : bs) {
+		Set<Site> sites=addBusesSites(path,busPaths);
+		for (Site site : sites) {
 			if (busSites[site.getStart()]==null||busSites[site.getStart()].getLen()<site.getLen()) {
 				busSites[site.getStart()]=site;
 			}
 		}
-		for (int i = 0; i < busSites.length; i++) {
-			if (busSites[i]==null) {
-				continue;
-			}
-			for (int j = i+1; j < busSites.length; j++) {
-				if (busSites[j]!=null) {
-					linkSite(busSites[i],busSites[j]);
-				}
+		
+		int count=0;
+		for (Site busSite : busSites) {
+			if (busSite!=null) {
+				count++;
 			}
 		}
-		return busSites;
+		Site[] newBusSite=new Site[count];
+		count=0;
+		for (Site busSite : busSites) {
+			if (busSite!=null) {
+				newBusSite[count]=busSite;
+				count++;
+			}
+		}
+		
+		for (int i = 0; i < newBusSite.length; i++) {
+			for (int j = i+1; j < newBusSite.length; j++) {
+				newBusSite[i].addNextSite(new GoSite(newBusSite[i],1,newBusSite[j]));
+				newBusSite[j].addNextSite(new GoSite(newBusSite[j],1,newBusSite[i]));
+			}
+		}
+		return newBusSite;
 	}
-	private static void linkSite(Site site1,Site site2){
-		site1.addNextSite(new GoSite(site1,1,site2));
-		site2.addNextSite(new GoSite(site2,1,site1));
-	}
-	public static LinkedList<Site> addBusesSites(LinkedList<Site> path, int[][] busPaths, String[] busNames) throws IOException, ClassNotFoundException {
-		LinkedList<Site> busSites=new LinkedList<Site>();
+	private static Set<Site> addBusesSites(LinkedList<Site> path, int[][] busPaths) throws IOException, ClassNotFoundException {
+		Set<Site> busSites=new HashSet<Site>();
 		for (int i = 0; i < busPaths.length; i++) {
-			addBusSite(path,busPaths[i],i,busNames[i],busSites);
+			addBusSite(path,busPaths[i],i,busSites);
 		}
 		return busSites;
 	}
-	private static void addBusSite(LinkedList<Site> path,int[] busPath,int busId,String busName,LinkedList<Site> busSites) throws IOException, ClassNotFoundException {
+	private static void addBusSite(LinkedList<Site> path,int[] busPath,int busId,Set<Site> busSites) throws IOException, ClassNotFoundException {
 		LinkedList<Site> newPath= CloneObject.clone(path);
 		Site site1;
 		Site site2=null;
 		int point=0;
 		int i=0;
-		for (Site site : newPath) {
+		for (Site site : newPath) {///////////////////////////////////////////////////////////
 			if (site2==null) {
 				site2=site;
 				continue;
@@ -92,12 +101,13 @@ public class Graph {
 				point=j;
 				Site busSite=site1.getBusSite();
 				if (busSite==null) {
-					busSite=new Site(busId,busName);
+					busSite=new Site(busId);
 					busSites.add(busSite);
 					site1.setBusSite(busSite);
 					site2.setBusSite(busSite);
 					busSite.setLen(2);
 					busSite.setStart(i);
+//					System.out.println(site1.getBusSite().getId());
 				}else {
 					site2.setBusSite(busSite);
 					busSite.setLen(busSite.getLen()+1);
@@ -105,6 +115,7 @@ public class Graph {
 			}
 			i++;
 		}
+//		System.out.println("??::"+path);
 	}
 	private static int findBusPath(Site site1, Site site2, int point, int[] busPath){
 		for (; point < busPath.length-1; point++) {
@@ -117,9 +128,9 @@ public class Graph {
 	
 	
 	
-	public static void printGraph(Site[] sites){
-		for (Site site : sites) {
-			System.out.println(site.toAllString());
-		}
-	}
+//	public static void printGraph(Site[] sites){
+//		for (Site site : sites) {
+//			System.out.println(site.toAllString());
+//		}
+//	}
 }

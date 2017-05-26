@@ -26,87 +26,101 @@ public class Dijkstra {
 		/*8*/		{0,0,0,0,3,0,4,4,0},
 		};
 		
-		int[][] busPaths={
+		int[][] busRoutes={
 		/*1*/		{0,1,6,4,8},
 		/*2*/		{0,1,4,7,8},
 		/*3*/		{0,1,3,6,8}
 		};
 		
-		LinkedList<LinkedList<Site>> paths=createPaths(siteNames,lens,busPaths);
+		Site[] sites=Graph.createSites(siteNames);
+		GoSite[][] goSites=Graph.createGoSites(lens,sites);
+		LinkedList<LinkedList<Site>> paths=createPaths(sites,goSites,busRoutes,0,8);
+		
+//		for (LinkedList<Site> path : paths) {
+//			System.out.println(path);
+//		}
 		
 		String[] busNames={"B0","B1","B2"};
-		
-		LinkedList<LinkedList<BusPath>> bps=dijkstraBuses(paths,busPaths,busNames);
-		for (LinkedList<BusPath> bp : bps) {
-			for (BusPath busPath : bp) {
-				if (busPath.getBusName()!=null) {
-					System.out.println("到"+busPath.getStart().getName()+"乘坐"+busPath.getBusName()+"到"+busPath.getEnd().getName()+"下车");
-				}else {
-					System.out.println("从"+busPath.getStart().getName()+"步行到"+busPath.getEnd().getName());
-				}
+
+		LinkedList<LinkedList<GoBus>> busPaths=dijkstraBuses(paths,busRoutes);
+		for (LinkedList<GoBus> busPath : busPaths) {
+			for (GoBus goBus : busPath) {
+				System.out.println("到"+goBus.getStart().getName()+"乘坐"+busNames[goBus.getBusId()]+"到"+goBus.getEnd().getName()+"下车");
 			}
 			System.out.println("到达目的地");
 		}
 	}
 	
-	public static LinkedList<LinkedList<BusPath>> dijkstraBuses(LinkedList<LinkedList<Site>> paths, int[][] busPaths, String[] busNames) throws IOException, ClassNotFoundException {
-		LinkedList<LinkedList<BusPath>> bps=new LinkedList<LinkedList<BusPath>>();
+	public static LinkedList<LinkedList<GoBus>> dijkstraBuses(LinkedList<LinkedList<Site>> paths, int[][] busRoutes) throws IOException, ClassNotFoundException {
+		LinkedList<LinkedList<GoBus>> goBusess=new LinkedList<LinkedList<GoBus>>();
 		for (LinkedList<Site> path : paths) {
-			bps.add(dijkstraBus(path,busPaths,busNames));
+			Site[] busSites=Graph.createBusesGraph(path,busRoutes);
+			
+			
+			
+			dijkstra(busSites,0,busSites.length-1);
+			
+			
+			System.out.println("--------------------------");
+			System.out.println(Arrays.toString(busSites));
+			System.out.println("---------------------------");
+			
+			LinkedList<LinkedList<Site>> busPaths=createPaths(busSites[busSites.length-1]);
+			for (LinkedList<Site> busPath : busPaths) {
+				LinkedList<GoBus> goBuses=new LinkedList<GoBus>();
+				for (Site site : busPath) {
+//					System.out.println("start:"+site.getStart()+":"+(site.getStart()+site.getLen()));
+					goBuses.add(new GoBus(
+							path.get(site.getStart()),
+							site.getId(),
+							path.get(site.getStart()+site.getLen()-1)
+					));
+				}
+				System.out.println("::"+goBuses);
+				goBusess.add(goBuses);
+			}
 		}
-		return bps;
+		return goBusess;
 	}
 	
-	public static LinkedList<BusPath> dijkstraBus(LinkedList<Site> path, int[][] busPaths, String[] busNames) throws IOException, ClassNotFoundException {
-		Site[] busSites=Graph.createBusesGraph(path,busPaths,busNames);
-		int count=0;
-		for (Site busSite : busSites) {
-			if (busSite!=null) {
-				count++;
-			}
-		}
-		Site[] newBusSite=new Site[count];
-		count=0;
-		for (Site busSite : busSites) {
-			if (busSite!=null) {
-				newBusSite[count]=busSite;
-				count++;
-			}
-		}
-		newBusSite=dijkstra(newBusSite,0,newBusSite.length-1);
-		LinkedList<LinkedList<Site>> answer=createPaths(newBusSite,0,newBusSite.length-1);
-		LinkedList<BusPath> bp=new LinkedList<BusPath>();
-		for (LinkedList<Site> an : answer) {
-			Site s=null;
-			for (Site site : an) {
-				s=site;
-				bp.add(new BusPath(path.get(site.getStart()),site.getName(),path.get(site.getStart()+site.getLen()-1)));
-			}
-			if (!path.get(s.getStart()+s.getLen()-1).equals(path.getLast())) {
-				bp.add(new BusPath(path.get(s.getStart()+s.getLen()-1),null,path.getLast()));
-			}
-		}
-		return bp;
+//	public static LinkedList<LinkedList<GoBus>> dijkstraBus(LinkedList<Site> path, int[][] busRoutes) throws IOException, ClassNotFoundException {
+//		Site[] busSites=Graph.createBusesGraph(path,busRoutes);
+//		dijkstra(busSites,0,busSites.length-1);
+//		LinkedList<LinkedList<Site>> busPaths=createPaths(path.getLast());
+//		LinkedList<LinkedList<GoBus>> goBusess=new LinkedList<LinkedList<GoBus>>();
+//		for (LinkedList<Site> busPath : busPaths) {
+//			LinkedList<GoBus> goBuses=new LinkedList<GoBus>();
+//			for (Site site : busPath) {
+//				goBuses.add(new GoBus(
+//						path.get(site.getStart()),
+//						site.getBusSite().getId(),
+//						path.get(site.getStart()+site.getLen()-1)
+//				));
+//			}
+//			goBusess.add(goBuses);
+//		}
+//		return goBusess;
+//	}
+	
+	/////////////////////////////////////////////////////////////////////
+	
+	public static LinkedList<LinkedList<Site>> createPaths(Site[] sites,GoSite[][] goSites,int[][] busRoutes,int startPoint,int endPoint) throws IOException, ClassNotFoundException {
+		sites=Graph.createSitesGraph(sites,busRoutes,goSites);
+		sites=Dijkstra.dijkstra(sites,startPoint,endPoint);
+		return createPaths(sites,endPoint);
 	}
 	
-	public static LinkedList<LinkedList<Site>> createPaths(String[] siteNames,double[][] lens,int[][] busPaths) throws IOException, ClassNotFoundException {
-		Site[] sites=Graph.createSites(siteNames);
-		GoSite[][] goSites=Graph.createGoSites(lens,sites);
-		sites=Graph.createSitesGraph(sites,busPaths,goSites);
-		sites=Dijkstra.dijkstra(sites,0,8);
-		return createPaths(sites,0,8);
+	private static LinkedList<LinkedList<Site>> createPaths(Site[] sites,int endPoint) throws IOException, ClassNotFoundException {
+		return createPaths(sites[endPoint]);
 	}
-	
-	
-	public static LinkedList<LinkedList<Site>> createPaths(Site[] sites,int startPoint,int endPoint) throws IOException, ClassNotFoundException {
+	private static LinkedList<LinkedList<Site>> createPaths(Site endSite) throws IOException, ClassNotFoundException {
 		LinkedList<LinkedList<Site>> paths=new LinkedList<LinkedList<Site>>();
 		LinkedList<Site> endPath=new LinkedList<Site>();
-		endPath.add(sites[endPoint]);
+		endPath.add(endSite);
 		paths.add(endPath);
 		createSubPaths(paths);
 		return paths;
 	}
-	
 	private static void createSubPaths(LinkedList<LinkedList<Site>> paths) throws IOException, ClassNotFoundException {
 		boolean goon;
 		do {
@@ -139,18 +153,18 @@ public class Dijkstra {
 		}while (goon);
 	}
 	
-	public static Site[] dijkstra(Site[] sites,int startPoint,int endPoint) throws IOException, ClassNotFoundException {
+	private static Site[] dijkstra(Site[] sites,int startPoint,int endPoint) throws IOException, ClassNotFoundException {
 		Site[] sitesClone= CloneObject.clone(sites);
 		Site site=sitesClone[startPoint];
-		Site end=sitesClone[endPoint];
 		site.setCountLen(0);
 		site.setP(true);
 		
+		Site end=sitesClone[endPoint];
 		Set<Site> ts= new HashSet<Site>();
 		subDijkstra(site,end,ts);
 		return sitesClone;
 	}
-	public static void subDijkstra(Site site,Site end,Set<Site> ts){
+	private static void subDijkstra(Site site,Site end,Set<Site> ts){
 		Set<GoSite> goSites=site.getGoSites();
 		double len;
 		for (GoSite goSite : goSites) {
