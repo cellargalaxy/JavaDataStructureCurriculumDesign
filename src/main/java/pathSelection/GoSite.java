@@ -43,7 +43,7 @@ public class GoSite implements Serializable{
 	@Override
 	public String toString() {
 		return "GoSite{" +
-//				"first=" + first +
+				"first=" + first +
 				", len=" + len +
 				", end=" + end +
 				'}';

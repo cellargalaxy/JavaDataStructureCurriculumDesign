@@ -99,7 +99,6 @@ public class Site implements Serializable{
 		this.goSites = goSites;
 	}
 	
-	
 	public Site getBusSite() {
 		return busSite;
 	}
@@ -142,14 +141,11 @@ public class Site implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Site{" +
+		return "\nSite{" +
 				"id=" + id +
 				", name='" + name + '\'' +
-				", countLen=" + countLen +
-//				", proSites=" + proSites +
-				", busSite=" + busSite +
-				", start=" + start +
-				", len=" + len +
+				", dimension=" + dimension +
+				", longitude=" + longitude +
 				'}';
 	}
 	
@@ -157,10 +153,10 @@ public class Site implements Serializable{
 		return "Site{" +
 				"id=" + id +
 				", name='" + name + '\'' +
+				", isP=" + isP +
 				", countLen=" + countLen +
 				", proSites=" + proSites +
 				", goSites=" + goSites +
-				", start=" + start +
 				'}';
 	}
 }

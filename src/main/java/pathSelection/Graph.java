@@ -34,19 +34,20 @@ public class Graph {
 		return goSites;
 	}
 	
-	
-	public static Site[] createSitesGraph(Site[] sites,int[][] busPaths,GoSite[][] goSites){
+	public static Site[] createSitesGraph(Site[] sites,int[][] busPaths,DataSet dataSet){
 		for (int[] busPath : busPaths) {
 			for (int i = 0; i < busPath.length-1; i++) {
-				sites[busPath[i]].addNextSite(goSites[ busPath[i] ][ busPath[i+1] ]);
+				sites[busPath[i]].addNextSite(dataSet.getGoSite(busPath[i],busPath[i+1]));//goSites[ busPath[i] ][ busPath[i+1] ]
 			}
 		}
 		return sites;
 	}
 	
+	
 	public static Site[] createBusesGraph(LinkedList<Site> path, int[][] busPaths) throws IOException, ClassNotFoundException {
 		Site[] busSites=new Site[path.size()-1];
 		Set<Site> sites=addBusesSites(path,busPaths);
+		
 		for (Site site : sites) {
 			if (busSites[site.getStart()]==null||busSites[site.getStart()].getLen()<site.getLen()) {
 				busSites[site.getStart()]=site;
@@ -89,7 +90,7 @@ public class Graph {
 		Site site2=null;
 		int point=0;
 		int i=0;
-		for (Site site : newPath) {///////////////////////////////////////////////////////////
+		for (Site site : newPath) {
 			if (site2==null) {
 				site2=site;
 				continue;
@@ -107,7 +108,6 @@ public class Graph {
 					site2.setBusSite(busSite);
 					busSite.setLen(2);
 					busSite.setStart(i);
-//					System.out.println(site1.getBusSite().getId());
 				}else {
 					site2.setBusSite(busSite);
 					busSite.setLen(busSite.getLen()+1);
@@ -115,7 +115,6 @@ public class Graph {
 			}
 			i++;
 		}
-//		System.out.println("??::"+path);
 	}
 	private static int findBusPath(Site site1, Site site2, int point, int[] busPath){
 		for (; point < busPath.length-1; point++) {
@@ -126,11 +125,4 @@ public class Graph {
 		return -1;
 	}
 	
-	
-	
-//	public static void printGraph(Site[] sites){
-//		for (Site site : sites) {
-//			System.out.println(site.toAllString());
-//		}
-//	}
 }
