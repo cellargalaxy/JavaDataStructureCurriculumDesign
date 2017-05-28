@@ -71,8 +71,10 @@ public class Graph {
 		
 		for (int i = 0; i < newBusSite.length; i++) {
 			for (int j = i+1; j < newBusSite.length; j++) {
-				newBusSite[i].addNextSite(new GoSite(newBusSite[i],1,newBusSite[j]));
-				newBusSite[j].addNextSite(new GoSite(newBusSite[j],1,newBusSite[i]));
+				if (newBusSite[i].getStart()+newBusSite[i].getLen()>newBusSite[j].getStart()) {
+					newBusSite[i].addNextSite(new GoSite(newBusSite[i],1,newBusSite[j]));
+					newBusSite[j].addNextSite(new GoSite(newBusSite[j],1,newBusSite[i]));
+				}
 			}
 		}
 		return newBusSite;

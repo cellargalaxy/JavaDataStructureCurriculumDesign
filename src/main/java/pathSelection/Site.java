@@ -141,11 +141,11 @@ public class Site implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "\nSite{" +
+		return "Site{" +
 				"id=" + id +
 				", name='" + name + '\'' +
-				", dimension=" + dimension +
-				", longitude=" + longitude +
+				", start=" + start +
+				", len=" + len +
 				'}';
 	}
 	
@@ -153,6 +153,8 @@ public class Site implements Serializable{
 		return "Site{" +
 				"id=" + id +
 				", name='" + name + '\'' +
+				", start=" + start +
+				", len=" + len +
 				", isP=" + isP +
 				", countLen=" + countLen +
 				", proSites=" + proSites +

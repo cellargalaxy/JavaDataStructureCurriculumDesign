@@ -10,49 +10,6 @@ import java.util.*;
  */
 public class Dijkstra {
 	
-	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		//not
-		String[] siteNames={"s0","s1","s2","s3","s4","s5","s6","s7","s8"};
-		
-		//not
-		double[][] lens={
-				/*   0 1 2 3 4 5 6 7 8    */
-		/*0*/		{0,1,2,0,0,0,0,8,0},
-		/*1*/		{1,0,0,4,3,0,2,0,0},
-		/*2*/		{2,0,0,0,3,5,0,0,0},
-		/*3*/		{0,4,0,0,0,0,2,0,0},
-		/*4*/		{0,3,3,0,0,0,2,1,3},
-		/*5*/		{0,0,5,0,0,0,0,2,0},
-		/*6*/		{0,2,0,2,2,0,0,0,4},
-		/*7*/		{8,0,0,0,1,2,0,0,4},
-		/*8*/		{0,0,0,0,3,0,4,4,0},
-		};
-		
-		//ok
-		int[][] busRoutes={
-		/*1*/		{0,1,6,4,8},
-		/*2*/		{0,1,4,7,8},
-		/*3*/		{0,1,3,6,8}
-		};
-		
-		//ok
-		Site[] sites=Graph.createSites(siteNames);
-		//nok
-		GoSite[][] goSites=Graph.createGoSites(lens,sites);
-		LinkedList<LinkedList<Site>> paths=createPaths(sites,goSites,busRoutes,0,8);
-		
-		//ok
-		String[] busNames={"B0","B1","B2"};
-
-		LinkedList<LinkedList<GoBus>> busPaths=dijkstraBuses(paths,busRoutes);
-		for (LinkedList<GoBus> busPath : busPaths) {
-			for (GoBus goBus : busPath) {
-				System.out.println("到"+goBus.getStart().getName()+"乘坐"+busNames[goBus.getBusId()]+"到"+goBus.getEnd().getName()+"下车");
-			}
-			System.out.println("到达目的地");
-		}
-	}
-	
 	public static LinkedList<LinkedList<GoBus>> dijkstraBuses(LinkedList<LinkedList<Site>> paths, int[][] busRoutes) throws IOException, ClassNotFoundException {
 		LinkedList<LinkedList<GoBus>> goBusess=new LinkedList<LinkedList<GoBus>>();
 		for (LinkedList<Site> path : paths) {
@@ -61,12 +18,17 @@ public class Dijkstra {
 			LinkedList<LinkedList<Site>> busPaths=createPaths(busSites[busSites.length-1]);
 			for (LinkedList<Site> busPath : busPaths) {
 				LinkedList<GoBus> goBuses=new LinkedList<GoBus>();
+				int end=-1;
 				for (Site site : busPath) {
+					if (end==-1) {
+						end=site.getStart();
+					}
 					goBuses.add(new GoBus(
-							path.get(site.getStart()),
+							path.get(end),
 							site.getId(),
 							path.get(site.getStart()+site.getLen()-1)
 					));
+					end=site.getStart()+site.getLen()-1;
 				}
 				goBusess.add(goBuses);
 			}
@@ -76,16 +38,10 @@ public class Dijkstra {
 	
 	/////////////////////////////////////////////////////////////////////
 	
-	public static LinkedList<LinkedList<Site>> createPaths(Site[] sites,DataSet dataSet,int[][] busRoutes,int startPoint,int endPoint) throws IOException, ClassNotFoundException {
-		sites=Graph.createSitesGraph(sites,busRoutes,dataSet);
-		sites=Dijkstra.dijkstra(sites,startPoint,endPoint);
-		return createPaths(sites,endPoint);
-	}
-	
-	private static LinkedList<LinkedList<Site>> createPaths(Site[] sites,int endPoint) throws IOException, ClassNotFoundException {
+	public static LinkedList<LinkedList<Site>> createPaths(Site[] sites,int endPoint) throws IOException, ClassNotFoundException {
 		return createPaths(sites[endPoint]);
 	}
-	private static LinkedList<LinkedList<Site>> createPaths(Site endSite) throws IOException, ClassNotFoundException {
+	public static LinkedList<LinkedList<Site>> createPaths(Site endSite) throws IOException, ClassNotFoundException {
 		LinkedList<LinkedList<Site>> paths=new LinkedList<LinkedList<Site>>();
 		LinkedList<Site> endPath=new LinkedList<Site>();
 		endPath.add(endSite);
@@ -125,14 +81,18 @@ public class Dijkstra {
 		}while (goon);
 	}
 	
-	private static Site[] dijkstra(Site[] sites,int startPoint,int endPoint) throws IOException, ClassNotFoundException {
-		Site site=sites[startPoint];
-		site.setCountLen(0);
-		site.setP(true);
-		
+	
+	public static Site[] dijkstra(Site[] sites,int startPoint,int endPoint) throws IOException, ClassNotFoundException {
+		Site startSite=sites[startPoint];
 		Site end=sites[endPoint];
+		return dijkstra(sites,startSite,end);
+	}
+	public static Site[] dijkstra(Site[] sites,Site startSite,Site endSite) throws IOException, ClassNotFoundException {
+		startSite.setCountLen(0);
+		startSite.setP(true);
+		
 		Set<Site> ts= new HashSet<Site>();
-		subDijkstra(site,end,ts);
+		subDijkstra(startSite,endSite,ts);
 		return sites;
 	}
 	private static void subDijkstra(Site site,Site end,Set<Site> ts){

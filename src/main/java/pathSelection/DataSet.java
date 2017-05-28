@@ -1,5 +1,7 @@
 package pathSelection;
 
+import jdk.nashorn.internal.ir.IfNode;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,24 +14,38 @@ import java.util.Map;
 public class DataSet {
 	private Site[] sites;
 	private String[] busNames;
-	private int[][] busSites;
+	private int[][] busRoutes;
 	private GoSite[][] goSites;
 	
 	private Map<String,Site> map;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		File[] dateSetFiles={new File("F:/xi/数据结构实验/t11.csv"),new File("F:/xi/数据结构实验/t30.csv"),new File("F:/xi/数据结构实验/t39.csv"),
 				new File("F:/xi/数据结构实验/t54.csv"),new File("F:/xi/数据结构实验/t252.csv"),new File("F:/xi/数据结构实验/t468.csv")};
 		DataSet dataSet=new DataSet(dateSetFiles,",","utf-8");
-		System.out.println("所有的站点：");
-		System.out.println(Arrays.toString(dataSet.sites));
-		System.out.println("-----------------------------");
-		System.out.println("所有的bus：");
-		System.out.println(Arrays.toString(dataSet.busNames));
-		System.out.println("-----------------------");
-		System.out.println("各条bus经过的站：");
-		for (int[] busSite : dataSet.busSites) {
-			System.out.println(Arrays.toString(busSite));
+		
+		dataSet.sites=Graph.createSitesGraph(dataSet.sites,dataSet.busRoutes,dataSet);
+		String startSiteName="迎龙路";
+		String endSiteName="广州塔西";
+		Site startSite=null;
+		Site endSite=null;
+		for (Site site : dataSet.sites) {
+			if (startSiteName.equals(site.getName())) {
+				startSite=site;
+			}
+			if (endSiteName.equals(site.getName())) {
+				endSite=site;
+			}
+		}
+		dataSet.sites=Dijkstra.dijkstra(dataSet.sites,startSite,endSite);
+		LinkedList<LinkedList<Site>> paths=Dijkstra.createPaths(endSite);
+		
+		LinkedList<LinkedList<GoBus>> busPaths=Dijkstra.dijkstraBuses(paths,dataSet.busRoutes);
+		for (LinkedList<GoBus> busPath : busPaths) {
+			for (GoBus goBus : busPath) {
+				System.out.println("到"+goBus.getStart().getName()+"乘坐"+dataSet.busNames[goBus.getBusId()]+"到"+goBus.getEnd().getName()+"下车");
+			}
+			System.out.println("到达目的地");
 		}
 	}
 	
@@ -45,9 +61,9 @@ public class DataSet {
 		return goSites[i][j];
 	}
 	private static double calculateDistance(Site site1,Site site2){
-		double dx=(site1.getDimension()-site2.getDimension())*100000;
-		double dy=(site1.getLongitude()+site2.getLongitude())*100000;
-		return Math.pow( ( (dx*dx)+(dy*dy) ) ,0.5);
+		double dx=(site1.getDimension()-site2.getDimension())*100;
+		double dy=(site1.getLongitude()+site2.getLongitude())*100;
+		return (dx*dx)+(dy*dy);
 	}
 	
 	private void readDataSets(File[] dateSetFiles, String separator, String coding){
@@ -62,14 +78,14 @@ public class DataSet {
 			id++;
 		}
 		busNames=new String[dateSetFiles.length];
-		busSites=new int[dateSetFiles.length][];
+		busRoutes =new int[dateSetFiles.length][];
 		for (int i = 0; i < dateSetFiles.length; i++) {
 			busNames[i]=dateSetFiles[i].getName().substring(0,dateSetFiles[i].getName().lastIndexOf('.'));
 			LinkedList<Site> sites=readBus(dateSetFiles[i],separator,coding);
-			busSites[i]=new int[sites.size()];
+			busRoutes[i]=new int[sites.size()];
 			int j=0;
 			for (Site site : sites) {
-				busSites[i][j]=site.getId();
+				busRoutes[i][j]=site.getId();
 				j++;
 			}
 		}
