@@ -30,7 +30,7 @@ public class HuffmanCoding {
 		tree = new HuffmanTree<Byte>(codings, bytes.iterator());
 	}
 	
-	protected HuffmanCoding(long[] counts, String fileNmae) {
+	public HuffmanCoding(long[] counts, String fileNmae) {
 		this.fileNmae = fileNmae;
 		Link<TreeNode> link = createLink(counts);
 		tree = new HuffmanTree<Byte>(link);
@@ -111,11 +111,31 @@ public class HuffmanCoding {
 		}
 	}
 	
+	public HuffmanTree<Byte> getTree() {
+		return tree;
+	}
+	
+	public void setTree(HuffmanTree<Byte> tree) {
+		this.tree = tree;
+	}
+	
+	public String[] getCodings() {
+		return codings;
+	}
+	
+	public void setCodings(String[] codings) {
+		this.codings = codings;
+	}
+	
+	public void setCodingHead(StringBuilder codingHead) {
+		this.codingHead = codingHead;
+	}
+	
 	public String getFileNmae() {
 		return fileNmae;
 	}
 	
-	public void printTree() {
-		tree.print();
+	public void setFileNmae(String fileNmae) {
+		this.fileNmae = fileNmae;
 	}
 }

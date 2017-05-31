@@ -11,23 +11,9 @@ public class HuffmanCountInputStream extends BufferedInputStream {
 	private long[] counts;
 	
 	
-	protected HuffmanCountInputStream(InputStream in) throws IOException {
+	public HuffmanCountInputStream(InputStream in) throws IOException {
 		super(in);
 		counts = new long[Byte.MAX_VALUE - Byte.MIN_VALUE + 1];
-		count();
-	}
-	
-	private void count() throws IOException {
-		byte[] bytes = new byte[1024];
-		try {
-			while (read(bytes, 0, bytes.length) != -1) ;
-		} finally {
-			try {
-				close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	@Override

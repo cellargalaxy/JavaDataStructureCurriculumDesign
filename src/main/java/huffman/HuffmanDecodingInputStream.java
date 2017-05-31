@@ -11,7 +11,7 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 	private byte over;
 	
 	
-	protected HuffmanDecodingInputStream(InputStream in) throws IOException {
+	public HuffmanDecodingInputStream(InputStream in) throws IOException {
 		super(in);
 		stringBuilder = new StringBuilder();
 		int result = 0;

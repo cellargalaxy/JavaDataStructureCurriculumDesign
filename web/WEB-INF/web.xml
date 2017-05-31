@@ -3,9 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+    
+    <filter>
+        <filter-name>DefaultFilter</filter-name>
+        <filter-class>web.DefaultFilter</filter-class>
+        <init-param>
+            <param-name>coding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>disableFilter</param-name>
+            <param-value>N</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>DefaultFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
     <servlet>
-        <servlet-name>UploadServlet</servlet-name>
-        <servlet-class>huffmanWeb.UploadServlet</servlet-class>
+        <servlet-name>CompressionServlet</servlet-name>
+        <servlet-class>web.CompressionServlet</servlet-class>
         <init-param>
             <param-name>tempPath</param-name>
             <param-value>file</param-value>
@@ -14,10 +32,72 @@
             <param-name>filePath</param-name>
             <param-value>file</param-value>
         </init-param>
+        <init-param>
+            <param-name>path</param-name>
+            <param-value>/huffman.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorPath</param-name>
+            <param-value>/error.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorInfo</param-name>
+            <param-value>文件压缩发生了异常，请稍后重试</param-value>
+        </init-param>
+        <init-param>
+            <param-name>title</param-name>
+            <param-value>哈夫曼压缩</param-value>
+        </init-param>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UploadServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <servlet-name>CompressionServlet</servlet-name>
+        <url-pattern>/compression</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DecompressionServlet</servlet-name>
+        <servlet-class>web.DecompressionServlet</servlet-class>
+        <init-param>
+            <param-name>tempPath</param-name>
+            <param-value>file</param-value>
+        </init-param>
+        <init-param>
+            <param-name>filePath</param-name>
+            <param-value>file</param-value>
+        </init-param>
+        <init-param>
+            <param-name>path</param-name>
+            <param-value>/huffman.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorPath</param-name>
+            <param-value>/error.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorInfo</param-name>
+            <param-value>文件解压发生了异常，请稍后重试</param-value>
+        </init-param>
+        <init-param>
+            <param-name>title</param-name>
+            <param-value>哈夫曼解压</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DecompressionServlet</servlet-name>
+        <url-pattern>/decompression</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ListFileServlet</servlet-name>
+        <servlet-class>web.ListFileServlet</servlet-class>
+        <init-param>
+            <param-name>path</param-name>
+            <param-value>/listFile.jsp</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListFileServlet</servlet-name>
+        <url-pattern>/listFile</url-pattern>
     </servlet-mapping>
 
 </web-app>

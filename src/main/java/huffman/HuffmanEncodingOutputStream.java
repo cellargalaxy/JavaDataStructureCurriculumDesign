@@ -10,7 +10,7 @@ public class HuffmanEncodingOutputStream extends BufferedOutputStream {
 	private StringBuilder stringBuilder;
 	
 	
-	protected HuffmanEncodingOutputStream(OutputStream out, HuffmanCoding huffmanCoding) throws IOException {
+	public HuffmanEncodingOutputStream(OutputStream out, HuffmanCoding huffmanCoding) throws IOException {
 		super(out);
 		this.huffmanCoding = huffmanCoding;
 		stringBuilder = new StringBuilder();
