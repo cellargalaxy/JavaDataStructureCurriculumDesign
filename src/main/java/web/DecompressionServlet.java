@@ -13,11 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -66,9 +64,26 @@ public class DecompressionServlet extends HttpServlet{
 			Iterator iterator = fileItems.iterator();
 			FileItem item = (FileItem) iterator.next();
 			
-			decodingInputStream=new HuffmanDecodingInputStream(new BufferedInputStream(item.getInputStream()));
+			String filename = item.getName();
+			filename = filename.substring(filename.lastIndexOf('\\')+1,filename.length());
+			File uploadFile = new File(filePath+"/"+(int)(Math.random()*100000)+filename);
+			item.write(uploadFile);
+			
+			decodingInputStream=new HuffmanDecodingInputStream(new BufferedInputStream(new FileInputStream(uploadFile)));
 			outputStream=new BufferedOutputStream(response.getOutputStream());
-			ServletSendFile.sendFile(response,decodingInputStream,outputStream,true,decodingInputStream.getFileName());
+			long size=ServletSendFile.sendFile(response,decodingInputStream,outputStream,true,decodingInputStream.getFileName());
+			
+			HttpSession session=request.getSession();
+			Object object=session.getAttribute("decompressionFiles");
+			LinkedList<FileBean> fileBeans;
+			if (object==null) {
+				fileBeans=new LinkedList<FileBean>();
+			}else {
+				fileBeans=(LinkedList) object;
+			}
+			fileBeans.add(new FileBean(item.getName(),uploadFile.length(),size));
+			session.setAttribute("decompressionFiles",fileBeans);
+			uploadFile.delete();
 		}catch (Exception e){
 			e.printStackTrace();
 			

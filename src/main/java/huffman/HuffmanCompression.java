@@ -8,14 +8,14 @@ import java.io.*;
 public class HuffmanCompression {
 	
 	public static void main(String[] args) throws IOException {
-		File file1 = new File("g:/罗小黑战记01.mp4");
+		File file1 = new File("g:/迅雷下载/blogData_train.csv");
 		long t1 = System.currentTimeMillis();
 		File file2 = compression(file1, new File("f:/"), null);
 		long t2 = System.currentTimeMillis();
-		File file3 = decompression(file2, new File("e:/"), "罗小黑战记.mp4");
+		File file3 = decompression(file2, new File("e:/"), "blogData_train.csv");
 		long t3 = System.currentTimeMillis();
-//		System.out.println("压缩时间：" + (t2 - t1));
-		System.out.println("解压时间：" + (t3 - t2));
+		System.out.println("压缩时间：" + (t2 - t1)/1000);
+		System.out.println("解压时间：" + (t3 - t2)/1000);
 	}
 	
 	public static File compression(File file, File saveFolder, String fileName) {
@@ -40,14 +40,12 @@ public class HuffmanCompression {
 		HuffmanEncodingOutputStream encodingOutputStream = null;
 		try {
 			
-			long t1 = System.currentTimeMillis();
 			HuffmanCountInputStream countInputStream = new HuffmanCountInputStream(new FileInputStream(file));
-			long t2 = System.currentTimeMillis();
-			System.out.println("统计时间：" + (t2 - t1));
 			
-			long t3 = System.currentTimeMillis();
 			
 			long[] counts = countInputStream.getCounts();
+			byte[] bs=new byte[1024];
+			while (countInputStream.read(bs) != -1);
 			HuffmanCoding huffmanCoding = new HuffmanCoding(counts, file.getName());
 			
 			inputStream = new BufferedInputStream(new FileInputStream(file));
@@ -58,8 +56,6 @@ public class HuffmanCompression {
 				encodingOutputStream.write(bytes, 0, len);
 			}
 			
-			long t4 = System.currentTimeMillis();
-			System.out.println("压缩时间：" + (t4 - t3));
 			
 			return newFile;
 		} catch (Exception e) {
@@ -67,12 +63,16 @@ public class HuffmanCompression {
 			return null;
 		} finally {
 			try {
-				inputStream.close();
+				if (inputStream!=null) {
+					inputStream.close();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			try {
-				encodingOutputStream.close();
+				if (encodingOutputStream!=null) {
+					encodingOutputStream.close();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -115,12 +115,16 @@ public class HuffmanCompression {
 			return null;
 		} finally {
 			try {
-				decodingInputStream.close();
+				if (decodingInputStream!=null) {
+					decodingInputStream.close();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			try {
-				outputStream.close();
+				if (outputStream!=null) {
+					outputStream.close();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

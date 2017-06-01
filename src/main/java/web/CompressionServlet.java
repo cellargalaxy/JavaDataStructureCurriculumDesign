@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,7 +70,7 @@ public class CompressionServlet extends HttpServlet{
 			
 			String filename = item.getName();
 			filename = filename.substring(filename.lastIndexOf('\\')+1,filename.length());
-			File uploadFile = new File(filePath+"/"+filename);
+			File uploadFile = new File(filePath+"/"+(int)(Math.random()*100000)+filename);
 			
 			countInputStream=new HuffmanCountInputStream(new BufferedInputStream(item.getInputStream()));
 			outputStream=new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -98,12 +97,14 @@ public class CompressionServlet extends HttpServlet{
 			}else {
 				fileBeans=(LinkedList) object;
 			}
-			fileBeans.add(new FileBean(uploadFile.getName(),uploadFile.length(),(size/8)));
+			fileBeans.add(new FileBean(item.getName(),uploadFile.length(),(size/8)));
 			session.setAttribute("compressionFiles",fileBeans);
 			
 			inputStream=new BufferedInputStream(new FileInputStream(uploadFile));
 			encodingOutputStream = new HuffmanEncodingOutputStream(response.getOutputStream(), huffmanCoding);
 			ServletSendFile.sendFile(response,inputStream,encodingOutputStream,true,uploadFile.getName()+".ha");
+		
+			uploadFile.delete();
 		} catch (Exception e){
 			e.printStackTrace();
 			

@@ -14,9 +14,9 @@
 <body>
 
 <table border="1">
-	<tr><td>文件名</td><td>源文件大小</td><td>压缩文件大小</td><td>压缩率</td></tr>
 	
 	<c:if test="${cd}">
+		<tr><td>文件名</td><td>源文件大小</td><td>压缩文件大小</td><td>压缩率</td></tr>
 		<c:forEach var="file" items="${compressionFiles}">
 			<tr>
 				<td>${file.fileName}</td>
@@ -28,6 +28,7 @@
 	</c:if>
 	
 	<c:if test="${!cd}">
+		<tr><td>文件名</td><td>压缩文件大小</td><td>源文件大小</td><td>解压率</td></tr>
 		<c:forEach var="file" items="${decompressionFiles}">
 			<tr>
 				<td>${file.fileName}</td>

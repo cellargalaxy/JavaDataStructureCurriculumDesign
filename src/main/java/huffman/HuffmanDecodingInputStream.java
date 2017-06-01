@@ -108,4 +108,28 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 	public String getFileName() {
 		return huffmanCoding.getFileNmae();
 	}
+	
+	public HuffmanCoding getHuffmanCoding() {
+		return huffmanCoding;
+	}
+	
+	public void setHuffmanCoding(HuffmanCoding huffmanCoding) {
+		this.huffmanCoding = huffmanCoding;
+	}
+	
+	public StringBuilder getStringBuilder() {
+		return stringBuilder;
+	}
+	
+	public void setStringBuilder(StringBuilder stringBuilder) {
+		this.stringBuilder = stringBuilder;
+	}
+	
+	public byte getOver() {
+		return over;
+	}
+	
+	public void setOver(byte over) {
+		this.over = over;
+	}
 }

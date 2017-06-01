@@ -1,6 +1,7 @@
 package huffman;
 
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**

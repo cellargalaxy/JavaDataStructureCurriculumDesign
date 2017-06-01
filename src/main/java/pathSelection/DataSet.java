@@ -20,8 +20,8 @@ public class DataSet {
 	private Map<String,Site> map;
 	
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		File[] dateSetFiles={new File("F:/xi/数据结构实验/t11.csv"),new File("F:/xi/数据结构实验/t30.csv"),new File("F:/xi/数据结构实验/t39.csv"),
-				new File("F:/xi/数据结构实验/t54.csv"),new File("F:/xi/数据结构实验/t252.csv"),new File("F:/xi/数据结构实验/t468.csv")};
+		File[] dateSetFiles={new File("11路.csv"),new File("30路.csv"),new File("39路.csv"),
+				new File("54路.csv"),new File("252路.csv"),new File("468路.csv")};
 		DataSet dataSet=new DataSet(dateSetFiles,",","utf-8");
 		
 		dataSet.sites=Graph.createSitesGraph(dataSet.sites,dataSet.busRoutes,dataSet);
