@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by cellargalaxy on 2017/5/19.
  */
-public class GoSite implements Serializable{
+public class GoSite implements Serializable {
 	private Site first;
 	private double len;
 	private Site end;

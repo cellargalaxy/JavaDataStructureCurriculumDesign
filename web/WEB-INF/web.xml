@@ -3,7 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
-    
+
+    <listener>
+        <listener-class>web.BusListener</listener-class>
+    </listener>
+
     <filter>
         <filter-name>DefaultFilter</filter-name>
         <filter-class>web.DefaultFilter</filter-class>
@@ -98,6 +102,52 @@
     <servlet-mapping>
         <servlet-name>ListFileServlet</servlet-name>
         <url-pattern>/listFile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>BusJsonServlet</servlet-name>
+        <servlet-class>web.BusJsonServlet</servlet-class>
+        <init-param>
+            <param-name>errorPath</param-name>
+            <param-value>/error.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorInfo</param-name>
+            <param-value>公交车路线查询出错！</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BusJsonServlet</servlet-name>
+        <url-pattern>/busJson</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>BusServlet</servlet-name>
+        <servlet-class>web.BusServlet</servlet-class>
+        <init-param>
+            <param-name>path</param-name>
+            <param-value>/bus.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>filePath</param-name>
+            <param-value>file</param-value>
+        </init-param>
+        <init-param>
+            <param-name>tempPath</param-name>
+            <param-value>file</param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorPath</param-name>
+            <param-value>/error.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorInfo</param-name>
+            <param-value>数据集上传失败</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BusServlet</servlet-name>
+        <url-pattern>/bus</url-pattern>
     </servlet-mapping>
 
 </web-app>

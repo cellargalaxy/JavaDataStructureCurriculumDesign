@@ -1,7 +1,6 @@
 package huffman;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  * Created by cellargalaxy on 2017/5/15.

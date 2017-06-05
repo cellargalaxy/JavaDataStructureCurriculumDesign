@@ -14,8 +14,8 @@ public class HuffmanCompression {
 		long t2 = System.currentTimeMillis();
 		File file3 = decompression(file2, new File("e:/"), "blogData_train.csv");
 		long t3 = System.currentTimeMillis();
-		System.out.println("压缩时间：" + (t2 - t1)/1000);
-		System.out.println("解压时间：" + (t3 - t2)/1000);
+		System.out.println("压缩时间：" + (t2 - t1) / 1000);
+		System.out.println("解压时间：" + (t3 - t2) / 1000);
 	}
 	
 	public static File compression(File file, File saveFolder, String fileName) {
@@ -44,8 +44,8 @@ public class HuffmanCompression {
 			
 			
 			long[] counts = countInputStream.getCounts();
-			byte[] bs=new byte[1024];
-			while (countInputStream.read(bs) != -1);
+			byte[] bs = new byte[1024];
+			while (countInputStream.read(bs) != -1) ;
 			HuffmanCoding huffmanCoding = new HuffmanCoding(counts, file.getName());
 			
 			inputStream = new BufferedInputStream(new FileInputStream(file));
@@ -63,14 +63,14 @@ public class HuffmanCompression {
 			return null;
 		} finally {
 			try {
-				if (inputStream!=null) {
+				if (inputStream != null) {
 					inputStream.close();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			try {
-				if (encodingOutputStream!=null) {
+				if (encodingOutputStream != null) {
 					encodingOutputStream.close();
 				}
 			} catch (Exception e) {
@@ -115,14 +115,14 @@ public class HuffmanCompression {
 			return null;
 		} finally {
 			try {
-				if (decodingInputStream!=null) {
+				if (decodingInputStream != null) {
 					decodingInputStream.close();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			try {
-				if (outputStream!=null) {
+				if (outputStream != null) {
 					outputStream.close();
 				}
 			} catch (Exception e) {

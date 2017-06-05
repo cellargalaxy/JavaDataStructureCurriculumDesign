@@ -13,7 +13,7 @@ public class FileBean {
 		this.fileName = fileName;
 		this.originalSize = originalSize;
 		this.laterSize = laterSize;
-		ratio=laterSize*1.0F/originalSize;
+		ratio = laterSize * 1.0F / originalSize;
 	}
 	
 	public String getFileName() {

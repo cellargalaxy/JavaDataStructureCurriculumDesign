@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Created by cellargalaxy on 2017/5/19.
  */
-public class Site implements Serializable{
+public class Site implements Serializable {
 	private int id;
 	private String name;
 	
@@ -24,28 +24,28 @@ public class Site implements Serializable{
 	private int len;
 	
 	public Site(String name) {
-		this(0,name);
+		this(0, name);
 	}
 	
 	public Site(int id) {
-		this(id,null);
+		this(id, null);
 	}
 	
 	public Site(int id, String name) {
-		this.id=id;
+		this.id = id;
 		this.name = name;
-		isP=false;
-		countLen=Integer.MAX_VALUE;
-		proSites=new HashSet<Site>();
-		goSites=new HashSet<GoSite>();
+		isP = false;
+		countLen = Integer.MAX_VALUE;
+		proSites = new HashSet<Site>();
+		goSites = new HashSet<GoSite>();
 	}
 	
 	
-	public void addProSite(Site site){
+	public void addProSite(Site site) {
 		proSites.add(site);
 	}
 	
-	public void addNextSite(GoSite goSite){
+	public void addNextSite(GoSite goSite) {
 		goSites.add(goSite);
 	}
 	/////////////////////////////////////////////////////////////////

@@ -26,29 +26,16 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 		}
 		String codingHead = new String(bytes);
 		huffmanCoding = new HuffmanCoding(codingHead);
-
-//		System.out.println("解压字典：");
-//		huffmanCoding.printCoding();
-//		System.out.println("解压树：");
-//		huffmanCoding.printTree();
 	}
 	
 	@Override
 	public synchronized int read(byte[] bs, int off, int len) throws IOException {
 		if (stringBuilder.length() > 32) {
-
-//			System.out.println("再次编码：");
-//			System.out.println(stringBuilder);
-			
 			int result = 0;
 			while (stringBuilder.length() > 16 && result < len) {
 				bs[off + result] = huffmanCoding.codingToByte(this);
 				result++;
 			}
-
-//			System.out.println("再次剩余编码：");
-//			System.out.println(stringBuilder);
-			
 			return result;
 		}
 		
@@ -66,29 +53,17 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 				}
 				stringBuilder.append(s);
 			}
-
-//			System.out.println("编码：");
-//			System.out.println(stringBuilder);
-			
 			result = 0;
 			while (stringBuilder.length() > 16 && result < len) {
 				bs[off + result] = huffmanCoding.codingToByte(this);
 				result++;
 			}
-
-//			System.out.println("剩余编码：");
-//			System.out.println(stringBuilder);
-			
 			return result;
 		} else {
 			if (stringBuilder.length() == 0) {
 				return -1;
 			} else {
 				stringBuilder.delete(stringBuilder.length() - over - 8, stringBuilder.length());
-
-//				System.out.println("删除剩余编码，超码：");
-//				System.out.println(stringBuilder+"："+over);
-				
 				result = 0;
 				while (stringBuilder.length() > 0 && result < len) {
 					bs[off + result] = huffmanCoding.codingToByte(this);
@@ -106,7 +81,7 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 	}
 	
 	public String getFileName() {
-		return huffmanCoding.getFileNmae();
+		return huffmanCoding.getFileName();
 	}
 	
 	public HuffmanCoding getHuffmanCoding() {

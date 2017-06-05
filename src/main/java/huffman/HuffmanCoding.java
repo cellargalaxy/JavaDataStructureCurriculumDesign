@@ -1,7 +1,6 @@
 package huffman;
 
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -11,13 +10,13 @@ public class HuffmanCoding {
 	private HuffmanTree<Byte> tree;
 	private String[] codings;
 	private StringBuilder codingHead;
-	private String fileNmae;
+	private String fileName;
 	
 	
 	protected HuffmanCoding(String codingHead) {
 		this.codingHead = new StringBuilder(codingHead);
 		String[] strings = codingHead.split(";");
-		fileNmae = strings[0].trim();
+		fileName = strings[0].trim();
 		strings = strings[1].trim().split(":");
 		codings = new String[Byte.MAX_VALUE - Byte.MIN_VALUE + 1];
 		LinkedList<Byte> bytes = new LinkedList<Byte>();
@@ -31,8 +30,8 @@ public class HuffmanCoding {
 		tree = new HuffmanTree<Byte>(codings, bytes.iterator());
 	}
 	
-	public HuffmanCoding(long[] counts, String fileNmae) {
-		this.fileNmae = fileNmae;
+	public HuffmanCoding(long[] counts, String fileName) {
+		this.fileName = fileName;
 		Link<TreeNode> link = createLink(counts);
 		tree = new HuffmanTree<Byte>(link);
 		codings = new String[Byte.MAX_VALUE - Byte.MIN_VALUE + 1];
@@ -87,21 +86,11 @@ public class HuffmanCoding {
 		} while (true);
 	}
 	
-	public void printCoding() {
-		byte b = Byte.MIN_VALUE;
-		for (String coding : codings) {
-			if (coding != null) {
-				System.out.println((char) (b) + ":" + b + "：" + coding);
-			}
-			b++;
-		}
-	}
-	
 	public StringBuilder getCodingHead() {
 		if (codingHead.length() > 0) {
 			return codingHead;
 		} else {
-			codingHead.append(fileNmae + ";");
+			codingHead.append(fileName + ";");
 			for (String coding : codings) {
 				if (coding != null) {
 					codingHead.append(coding);
@@ -132,11 +121,11 @@ public class HuffmanCoding {
 		this.codingHead = codingHead;
 	}
 	
-	public String getFileNmae() {
-		return fileNmae;
+	public String getFileName() {
+		return fileName;
 	}
 	
-	public void setFileNmae(String fileNmae) {
-		this.fileNmae = fileNmae;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

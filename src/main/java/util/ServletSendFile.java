@@ -15,13 +15,13 @@ public class ServletSendFile {
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + URLEncoder.encode(fileName, "UTF-8") + "\"");
 		}
 		
-		long size=0;
+		long size = 0;
 		int len;
 		byte[] bs = new byte[1024 * 10];
-		while ((len = inputStream.read(bs,0,bs.length)) != -1) {
+		while ((len = inputStream.read(bs, 0, bs.length)) != -1) {
 			outputStream.write(bs, 0, len);
 			outputStream.flush();
-			size+=len;
+			size += len;
 		}
 		return size;
 	}

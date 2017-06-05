@@ -20,11 +20,6 @@ public class HuffmanEncodingOutputStream extends BufferedOutputStream {
 			bs[i] = bytes[i];
 		}
 		super.write(bs, 0, bs.length);
-
-//		System.out.println("压缩字典：");
-//		huffmanCoding.printCoding();
-//		System.out.println("压缩树：");
-//		huffmanCoding.printTree();
 	}
 	
 	@Override
@@ -32,10 +27,6 @@ public class HuffmanEncodingOutputStream extends BufferedOutputStream {
 		for (int i = off; i < len; i++) {
 			stringBuilder.append(huffmanCoding.byteToCoding(bs[i]));
 		}
-
-//		System.out.println("生成编码：");
-//		System.out.println(stringBuilder);
-		
 		len = stringBuilder.length() / 8;
 		if (off + len > bs.length) {
 			len = bs.length - off;
@@ -44,10 +35,6 @@ public class HuffmanEncodingOutputStream extends BufferedOutputStream {
 			bs[i] = (byte) Integer.parseInt(stringBuilder.substring(0, 8), 2);
 			stringBuilder.delete(0, 8);
 		}
-
-//		System.out.println("剩余编码：");
-//		System.out.println(stringBuilder);
-		
 		super.write(bs, off, len);
 	}
 	
@@ -63,10 +50,6 @@ public class HuffmanEncodingOutputStream extends BufferedOutputStream {
 				bs[i] = (byte) Integer.parseInt(stringBuilder.substring(0, 8), 2);
 				stringBuilder.delete(0, 8);
 			}
-
-//			System.out.println("剩余编码：");
-//			System.out.println(stringBuilder);
-			
 			super.write(bs, 0, len);
 		}
 		
@@ -75,10 +58,6 @@ public class HuffmanEncodingOutputStream extends BufferedOutputStream {
 			stringBuilder.append("0");
 			over++;
 		}
-
-//		System.out.println("最终编码，超码：");
-//		System.out.println(stringBuilder+"："+over);
-		
 		byte b = (byte) Integer.parseInt(stringBuilder.substring(0, 8), 2);
 		stringBuilder.delete(0, 8);
 		super.write(b);
