@@ -10,7 +10,10 @@ public class HuffmanDecodingInputStream extends BufferedInputStream {
 	private StringBuilder stringBuilder;
 	private byte over;
 	
-	
+	/**
+	 * @param in 压缩文件输入流对象
+	 * @throws IOException
+	 */
 	public HuffmanDecodingInputStream(InputStream in) throws IOException {
 		super(in);
 		stringBuilder = new StringBuilder();

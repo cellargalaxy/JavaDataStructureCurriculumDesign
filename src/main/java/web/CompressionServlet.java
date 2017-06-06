@@ -24,6 +24,7 @@ import java.util.List;
  * Created by cellargalaxy on 2017/5/28.
  */
 public class CompressionServlet extends HttpServlet {
+	private String coding;
 	private String path;
 	private String errorPath;
 	private String tempPath;
@@ -34,6 +35,7 @@ public class CompressionServlet extends HttpServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		coding = config.getInitParameter("coding");
 		ServletContext servletContext = getServletContext();
 		path = config.getInitParameter("path");
 		errorPath = config.getInitParameter("errorPath");
@@ -57,20 +59,23 @@ public class CompressionServlet extends HttpServlet {
 		BufferedOutputStream outputStream = null;
 		BufferedInputStream inputStream = null;
 		HuffmanEncodingOutputStream encodingOutputStream = null;
+		FileItem item = null;
+		File uploadFile = null;
 		try {
 			DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
 			diskFileItemFactory.setSizeThreshold(1024 * 1024);
 			diskFileItemFactory.setRepository(new File(tempPath));
 			ServletFileUpload servletFileUpload = new ServletFileUpload(diskFileItemFactory);
+			servletFileUpload.setHeaderEncoding(coding);
 //			servletFileUpload.setSizeMax(4 * 1024 * 1024);
 			
 			List fileItems = servletFileUpload.parseRequest(request);
 			Iterator iterator = fileItems.iterator();
-			FileItem item = (FileItem) iterator.next();
+			item = (FileItem) iterator.next();
 			
 			String filename = item.getName();
 			filename = filename.substring(filename.lastIndexOf('\\') + 1, filename.length());
-			File uploadFile = new File(filePath + "/" + filename);
+			uploadFile = new File(filePath + "/" + filename);
 			
 			countInputStream = new HuffmanCountInputStream(new BufferedInputStream(item.getInputStream()));
 			outputStream = new BufferedOutputStream(new FileOutputStream(uploadFile));
@@ -82,7 +87,7 @@ public class CompressionServlet extends HttpServlet {
 			outputStream.flush();
 			
 			long[] counts = countInputStream.getCounts();
-			HuffmanCoding huffmanCoding = new HuffmanCoding(counts, uploadFile.getName());
+			HuffmanCoding huffmanCoding = new HuffmanCoding(countInputStream, uploadFile.getName());
 			String[] coding = huffmanCoding.getCodings();
 			long size = 0;
 			for (int i = 0; i < counts.length; i++) {
@@ -104,8 +109,6 @@ public class CompressionServlet extends HttpServlet {
 			inputStream = new BufferedInputStream(new FileInputStream(uploadFile));
 			encodingOutputStream = new HuffmanEncodingOutputStream(response.getOutputStream(), huffmanCoding);
 			ServletSendFile.sendFile(response, inputStream, encodingOutputStream, true, uploadFile.getName() + ".ha");
-			
-			uploadFile.delete();
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -138,6 +141,20 @@ public class CompressionServlet extends HttpServlet {
 			try {
 				if (inputStream != null) {
 					inputStream.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (item != null) {
+					item.delete();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (uploadFile != null) {
+					uploadFile.delete();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

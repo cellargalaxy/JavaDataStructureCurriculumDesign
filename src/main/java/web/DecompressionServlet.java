@@ -22,6 +22,7 @@ import java.util.List;
  * Created by cellargalaxy on 2017/5/31.
  */
 public class DecompressionServlet extends HttpServlet {
+	private String coding;
 	private String path;
 	private String errorPath;
 	private String tempPath;
@@ -32,6 +33,7 @@ public class DecompressionServlet extends HttpServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		coding = config.getInitParameter("coding");
 		title = config.getInitParameter("title");
 		path = config.getInitParameter("path");
 		errorPath = config.getInitParameter("errorPath");
@@ -53,20 +55,23 @@ public class DecompressionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HuffmanDecodingInputStream decodingInputStream = null;
 		BufferedOutputStream outputStream = null;
+		FileItem item = null;
+		File uploadFile = null;
 		try {
 			DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
 			diskFileItemFactory.setSizeThreshold(1024 * 1024);
 			diskFileItemFactory.setRepository(new File(tempPath));
 			ServletFileUpload servletFileUpload = new ServletFileUpload(diskFileItemFactory);
+			servletFileUpload.setHeaderEncoding(coding);
 //			servletFileUpload.setSizeMax(4 * 1024 * 1024);
 			
 			List fileItems = servletFileUpload.parseRequest(request);
 			Iterator iterator = fileItems.iterator();
-			FileItem item = (FileItem) iterator.next();
+			item = (FileItem) iterator.next();
 			
 			String filename = item.getName();
 			filename = filename.substring(filename.lastIndexOf('\\') + 1, filename.length());
-			File uploadFile = new File(filePath + "/" + filename);
+			uploadFile = new File(filePath + "/" + filename);
 			item.write(uploadFile);
 			
 			decodingInputStream = new HuffmanDecodingInputStream(new BufferedInputStream(new FileInputStream(uploadFile)));
@@ -83,7 +88,6 @@ public class DecompressionServlet extends HttpServlet {
 			}
 			fileBeans.add(new FileBean(item.getName(), uploadFile.length(), size));
 			session.setAttribute("decompressionFiles", fileBeans);
-			uploadFile.delete();
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -102,6 +106,20 @@ public class DecompressionServlet extends HttpServlet {
 			try {
 				if (outputStream != null) {
 					outputStream.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (item != null) {
+					item.delete();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (uploadFile != null) {
+					uploadFile.delete();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

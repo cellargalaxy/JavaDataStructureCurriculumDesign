@@ -13,6 +13,11 @@ public class Link<T> {
 		len = 0;
 	}
 	
+	/**
+	 * 添加一个节点，并且根据节点的权重进行排序
+	 *
+	 * @param linkNode
+	 */
 	public void addNode(LinkNode<T> linkNode) {
 		if (len == 0) {
 			first = linkNode;
@@ -62,6 +67,9 @@ public class Link<T> {
 		}
 	}
 	
+	/**
+	 * @return 弹出权重最小的一个节点，若链表为空则返回null
+	 */
 	public LinkNode<T> pollNode() {
 		if (len == 0) {
 			return null;

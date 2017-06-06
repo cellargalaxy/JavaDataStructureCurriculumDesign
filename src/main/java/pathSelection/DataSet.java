@@ -22,9 +22,8 @@ public class DataSet implements Serializable {
 				new File("src/main/resources/39路.csv"), new File("src/main/resources/54路.csv"),
 				new File("src/main/resources/252路.csv"), new File("src/main/resources/468路.csv")};
 		DataSet dataSet = new DataSet(dateSetFiles, ",", "utf-8");
-		dataSet.sites = Graph.createSitesGraph(dataSet.sites, dataSet.busRoutes, dataSet);
+		dataSet.sites = Graph.createSitesGraph(dataSet);
 		
-		Site[] sites = dataSet.sites;
 		
 		String startSiteName = "迎龙路";
 		String endSiteName = "广州塔西";
@@ -57,6 +56,11 @@ public class DataSet implements Serializable {
 		}
 	}
 	
+	/**
+	 * @param dateSetFiles 数据集文件数组
+	 * @param separator    数据集数据的分隔符
+	 * @param coding       数据集文件的编码
+	 */
 	public DataSet(File[] dateSetFiles, String separator, String coding) {
 		map = new HashMap<String, Site>();
 		readDataSets(dateSetFiles, separator, coding);

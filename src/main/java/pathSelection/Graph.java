@@ -34,10 +34,18 @@ public class Graph {
 		return goSites;
 	}
 	
-	public static Site[] createSitesGraph(Site[] sites, int[][] busPaths, DataSet dataSet) {
-		for (int[] busPath : busPaths) {
-			for (int i = 0; i < busPath.length - 1; i++) {
-				sites[busPath[i]].addNextSite(dataSet.getGoSite(busPath[i], busPath[i + 1]));//goSites[ busPath[i] ][ busPath[i+1] ]
+	/**
+	 * 根据数据集，创建节点数组，并且连接节点为邻接表
+	 *
+	 * @param dataSet
+	 * @return 节点数组
+	 */
+	public static Site[] createSitesGraph(DataSet dataSet) {
+		Site[] sites = dataSet.getSites();
+		int[][] busRoutes = dataSet.getBusRoutes();
+		for (int[] busRoute : busRoutes) {
+			for (int i = 0; i < busRoute.length - 1; i++) {
+				sites[busRoute[i]].addNextSite(dataSet.getGoSite(busRoute[i], busRoute[i + 1]));
 			}
 		}
 		return sites;

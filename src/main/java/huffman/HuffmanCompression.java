@@ -46,7 +46,7 @@ public class HuffmanCompression {
 			long[] counts = countInputStream.getCounts();
 			byte[] bs = new byte[1024];
 			while (countInputStream.read(bs) != -1) ;
-			HuffmanCoding huffmanCoding = new HuffmanCoding(counts, file.getName());
+			HuffmanCoding huffmanCoding = new HuffmanCoding(countInputStream, file.getName());
 			
 			inputStream = new BufferedInputStream(new FileInputStream(file));
 			encodingOutputStream = new HuffmanEncodingOutputStream(new FileOutputStream(newFile), huffmanCoding);

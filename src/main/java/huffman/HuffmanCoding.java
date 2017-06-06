@@ -12,7 +12,11 @@ public class HuffmanCoding {
 	private StringBuilder codingHead;
 	private String fileName;
 	
-	
+	/**
+	 * 通过压缩文件的文件头保存的哈夫曼编码构建哈夫曼树
+	 *
+	 * @param codingHead 压缩文件的文件头
+	 */
 	protected HuffmanCoding(String codingHead) {
 		this.codingHead = new StringBuilder(codingHead);
 		String[] strings = codingHead.split(";");
@@ -30,9 +34,13 @@ public class HuffmanCoding {
 		tree = new HuffmanTree<Byte>(codings, bytes.iterator());
 	}
 	
-	public HuffmanCoding(long[] counts, String fileName) {
+	/**
+	 * @param countInputStream 统计完比特结果的HuffmanCountInputStream对象
+	 * @param fileName         源文件名
+	 */
+	public HuffmanCoding(HuffmanCountInputStream countInputStream, String fileName) {
 		this.fileName = fileName;
-		Link<TreeNode> link = createLink(counts);
+		Link<TreeNode> link = createLink(countInputStream.getCounts());
 		tree = new HuffmanTree<Byte>(link);
 		codings = new String[Byte.MAX_VALUE - Byte.MIN_VALUE + 1];
 		createCodings(tree.getRoot());

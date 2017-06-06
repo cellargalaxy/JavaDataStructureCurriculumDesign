@@ -22,7 +22,7 @@ public class BusListener implements ServletContextListener {
 					new File(rootPath + File.separator + "WEB-INF/classes/39路.csv"), new File(rootPath + File.separator + "WEB-INF/classes/54路.csv"),
 					new File(rootPath + File.separator + "WEB-INF/classes/252路.csv"), new File(rootPath + File.separator + "WEB-INF/classes/468路.csv")};
 			dataSet = new DataSet(dateSetFiles, ",", "utf-8");
-			dataSet.setSites(Graph.createSitesGraph(dataSet.getSites(), dataSet.getBusRoutes(), dataSet));
+			dataSet.setSites(Graph.createSitesGraph(dataSet));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

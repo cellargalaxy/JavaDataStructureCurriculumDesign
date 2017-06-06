@@ -16,6 +16,16 @@ public class HuffmanCountInputStream extends BufferedInputStream {
 		counts = new long[Byte.MAX_VALUE - Byte.MIN_VALUE + 1];
 	}
 	
+	/**
+	 * 重写了read方法，在读取的每一个比特数组时，
+	 * 都会统计数组里各个比特值出现的频数，并保存到一个long数组里
+	 *
+	 * @param bs
+	 * @param off
+	 * @param len
+	 * @return
+	 * @throws IOException
+	 */
 	@Override
 	public synchronized int read(byte[] bs, int off, int len) throws IOException {
 		int result = super.read(bs, off, len);

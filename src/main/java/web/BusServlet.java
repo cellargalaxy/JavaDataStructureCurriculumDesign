@@ -22,6 +22,7 @@ import java.util.List;
  * Created by cellargalaxy on 2017/6/4.
  */
 public class BusServlet extends HttpServlet {
+	private String coding;
 	private String filePath;
 	private String tempPath;
 	private String path;
@@ -32,6 +33,7 @@ public class BusServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		ServletContext servletContext = getServletContext();
+		coding = config.getInitParameter("coding");
 		path = config.getInitParameter("path");
 		errorPath = config.getInitParameter("errorPath");
 		errorInfo = config.getInitParameter("errorInfo");
@@ -46,16 +48,17 @@ public class BusServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		LinkedList<File> dateSetFiles = new LinkedList<File>();
 		try {
 			DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
 			diskFileItemFactory.setSizeThreshold(1024 * 1024);
 			diskFileItemFactory.setRepository(new File(tempPath));
 			ServletFileUpload servletFileUpload = new ServletFileUpload(diskFileItemFactory);
+			servletFileUpload.setHeaderEncoding(coding);
 //			servletFileUpload.setSizeMax(4 * 1024 * 1024);
 			
 			List fileItems = servletFileUpload.parseRequest(req);
 			Iterator iterator = fileItems.iterator();
-			LinkedList<File> dateSetFiles = new LinkedList<File>();
 			while (iterator.hasNext()) {
 				FileItem item = (FileItem) iterator.next();
 				if (!item.isFormField()) {
@@ -64,13 +67,14 @@ public class BusServlet extends HttpServlet {
 					File uploadFile = new File(filePath + "/" + filename + (int) (Math.random() * 100000));
 					item.write(uploadFile);
 					dateSetFiles.add(uploadFile);
+					item.delete();
 				} else {
 //					String desc = item.getString("UTF-8");
 //					System.out.println("文件描述：" + desc);
 				}
 			}
 			DataSet dataSet = new DataSet(dateSetFiles, ",", "utf-8");
-			dataSet.setSites(Graph.createSitesGraph(dataSet.getSites(), dataSet.getBusRoutes(), dataSet));
+			dataSet.setSites(Graph.createSitesGraph(dataSet));
 			req.getSession().setAttribute("dataSet", dataSet);
 			doGet(req, resp);
 		} catch (Exception e) {
@@ -80,6 +84,10 @@ public class BusServlet extends HttpServlet {
 			resp.setContentType("text/plain;charset=utf-8");
 			req.setAttribute("error", errorInfo);
 			req.getRequestDispatcher(errorPath).forward(req, resp);
+		} finally {
+			for (File dateSetFile : dateSetFiles) {
+				dateSetFile.delete();
+			}
 		}
 	}
 }

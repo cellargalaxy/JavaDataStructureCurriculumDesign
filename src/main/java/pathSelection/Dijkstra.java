@@ -9,7 +9,15 @@ import java.util.*;
  * Created by cellargalaxy on 2017/5/19.
  */
 public class Dijkstra {
-	
+	/**
+	 * 根据最短路的路径与各公交车的行驶路线，计算出最少换乘方案
+	 *
+	 * @param paths     最短路
+	 * @param busRoutes 各公交车的行驶路线
+	 * @return 最少换乘方案链表
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public static LinkedList<LinkedList<GoBus>> dijkstraBuses(LinkedList<LinkedList<Site>> paths, int[][] busRoutes) throws IOException, ClassNotFoundException {
 		LinkedList<LinkedList<GoBus>> goBusess = new LinkedList<LinkedList<GoBus>>();
 		for (LinkedList<Site> path : paths) {
@@ -47,6 +55,14 @@ public class Dijkstra {
 		return createPaths(sites[endPoint]);
 	}
 	
+	/**
+	 * 从终点节点回溯到起点节点，创建最短路
+	 *
+	 * @param endSite 终点节点
+	 * @return 每一条最短路的节点保存到一个链表里，多条最短路再保存到链表里
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public static LinkedList<LinkedList<Site>> createPaths(Site endSite) throws IOException, ClassNotFoundException {
 		LinkedList<LinkedList<Site>> paths = new LinkedList<LinkedList<Site>>();
 		LinkedList<Site> endPath = new LinkedList<Site>();
@@ -95,6 +111,16 @@ public class Dijkstra {
 		return dijkstra(sites, startSite, end);
 	}
 	
+	/**
+	 * 调用dijkstra算法，计算出来路长的来路节点会保存在各自节点里
+	 *
+	 * @param sites     邻接表的节点数组
+	 * @param startSite 起点节点
+	 * @param endSite   终点节点
+	 * @return 保存了路长的来路节点的新邻接表的节点数组
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public static Site[] dijkstra(Site[] sites, Site startSite, Site endSite) throws IOException, ClassNotFoundException {
 		startSite.setCountLen(0);
 		startSite.setP(true);

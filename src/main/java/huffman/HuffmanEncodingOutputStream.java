@@ -9,7 +9,11 @@ public class HuffmanEncodingOutputStream extends BufferedOutputStream {
 	private HuffmanCoding huffmanCoding;
 	private StringBuilder stringBuilder;
 	
-	
+	/**
+	 * @param out           压缩文件的输出流
+	 * @param huffmanCoding 哈弗曼编码对象
+	 * @throws IOException
+	 */
 	public HuffmanEncodingOutputStream(OutputStream out, HuffmanCoding huffmanCoding) throws IOException {
 		super(out);
 		this.huffmanCoding = huffmanCoding;

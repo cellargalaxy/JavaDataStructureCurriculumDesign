@@ -8,7 +8,9 @@ import java.util.Iterator;
 public class HuffmanTree<T> {
 	private TreeNode<T> root;
 	
-	
+	/**
+	 * @param link 保存了哈夫曼树各个叶子节点的链表
+	 */
 	protected HuffmanTree(Link<TreeNode> link) {
 		root = createTree(link);
 		createCodings(root);
@@ -43,6 +45,14 @@ public class HuffmanTree<T> {
 		}
 	}
 	
+	/**
+	 * 在链表里取出权重最小的两个节点，对这两个节点进行树连接
+	 * 把得到的父节点保存回链表中，直到链表长度为1
+	 * 此节点为哈夫曼树的根节点
+	 *
+	 * @param link
+	 * @return
+	 */
 	private TreeNode createTree(Link<TreeNode> link) {
 		while (link.getLen() > 1) {
 			LinkNode<TreeNode> linkNode1 = link.pollNode();

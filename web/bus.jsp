@@ -16,6 +16,9 @@
 	<style type="text/css">
 		body {
 			background-image: url("background.jpg");
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			background-size: cover;
 		}
 		
 		#main {
@@ -111,8 +114,8 @@
 </head>
 <body>
 <div id="inquire" style="">
-	<div class="cen">起点：<input type="text" name="start" style="width: 80%;max-width: 15em"></div>
-	<div class="cen">终点：<input type="text" name="end" style="width: 80%;max-width: 15em"></div>
+	<div class="cen">起点：<input type="text" name="start" style="width: 80%;max-width: 15em" readonly></div>
+	<div class="cen">终点：<input type="text" name="end" style="width: 80%;max-width: 15em" readonly></div>
 	<div class="cen">
 		<button id="clearInquire">清空查询框</button>
 		<button id="inquireButton">查询最短乘车路径</button>
@@ -128,8 +131,8 @@
 	<div class="space" style="height: auto;background-color: rgba(255,255,255,0.6)">
 		<h4>上传数据集</h4>
 		<form action="" method="post" enctype="multipart/form-data">
-			<input type="file" name="dataSet" multiple="multiple" required>
-			<input type="submit" value="上传数据集">
+			<input type="file" name="dataSet" multiple="multiple" style="width: 80%;max-width: 15em" required>
+			<input type="submit" value="上传数据集" style="width: 80%;max-width: 15em">
 		</form>
 	</div>
 	<div id="answers"></div>
